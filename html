@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f4f4f4;
+    }
+
+    .calculator {
+      background: #222;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .display {
+      background: #000;
+      color: #0f0;
+      font-size: 2em;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: right;
+      margin-bottom: 10px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 60px);
+      gap: 10px;
+    }
+
+    button {
+      padding: 15px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 8px;
+      background-color: #333;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background-color: #555;
+    }
+
+    .operator {
+      background-color: #ff9500;
+    }
+
+    .equal {
+      background-color: #28a745;
+    }
+
+    .clear {
+      background-color: #dc3545;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="display" id="display">0</div>
+    <div class="buttons">
+      <button class="clear">C</button>
+      <button>(</button>
+      <button>)</button>
+      <button class="operator">/</button>
+
+      <button>7</button>
+      <button>8</button>
+      <button>9</button>
+      <button class="operator">*</button>
+
+      <button>4</button>
+      <button>5</button>
+      <button>6</button>
+      <button class="operator">-</button>
+
+      <button>1</button>
+      <button>2</button>
+      <button>3</button>
+      <button class="operator">+</button>
+
+      <button>0</button>
+      <button>.</button>
+      <button class="equal">=</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById("display");
+    const buttons = document.querySelectorAll(".buttons button");
+
+    let currentInput = "";
+
+    function updateDisplay() {
+      display.textContent = currentInput || "0";
+    }
+
+    function handleInput(value) {
+      if (value === "=") {
+        try {
+          currentInput = eval(currentInput).toString();
+        } catch (e) {
+          currentInput = "Error";
+        }
+      } else if (value === "C") {
+        currentInput = "";
+      } else {
+        if (currentInput === "Error") currentInput = "";
+        currentInput += value;
+      }
+      updateDisplay();
+    }
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        handleInput(btn.textContent);
+      });
+    });
+
+    document.addEventListener("keydown", (e) => {
+      const allowedKeys = "0123456789+-*/().";
+      if (allowedKeys.includes(e.key)) {
+        if (currentInput === "Error") currentInput = "";
+        currentInput += e.key;
+        updateDisplay();
+      } else if (e.key === "Enter") {
+        handleInput("=");
+      } else if (e.key === "Backspace") {
+        currentInput = currentInput.slice(0, -1);
+        updateDisplay();
+      } else if (e.key.toLowerCase() === "c") {
+        handleInput("C");
+      }
+    });
+  </script>
+</body>
+</html>
